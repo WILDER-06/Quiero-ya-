@@ -2,9 +2,15 @@
 
 Primera entrega de código del proyecto QuieroYa!, plataforma digital de administración de entrega de productos a domicilio.
 
-Implementa la **Épica 1: Autenticación y Roles**:
+Implementa:
+
+**Épica 1: Autenticación y Roles**
 - **EP1-HU01** — Registro diferenciado por rol (cliente, negocio, repartidor)
 - **EP1-HU02** — Aprobación/rechazo de negocios y repartidores por el administrador
+
+**Épica 2: Negocios y Catálogo**
+- **EP2-HU03** — Gestión de catálogo de productos (crear, editar, desactivar)
+- **EP2-HU04** — Recepción de subpedidos (aceptar con descuento de stock, o rechazar)
 
 ## Stack
 
@@ -41,6 +47,13 @@ Implementa la **Épica 1: Autenticación y Roles**:
 | POST | `/api/auth/registro/repartidor` | Registra un repartidor (queda pendiente de aprobación) |
 | GET | `/api/auth/solicitudes/:rol` | Lista negocios/repartidores pendientes (`rol` = negocio o repartidor) |
 | PATCH | `/api/auth/solicitudes/:rol/:id` | Aprueba o rechaza una solicitud (`{"accion":"aprobar"}` o `{"accion":"rechazar","motivo":"..."}`) |
+| POST | `/api/negocios/:negocioId/productos` | Crea un producto en el catálogo del negocio |
+| GET | `/api/negocios/:negocioId/productos` | Lista el catálogo del negocio |
+| PUT | `/api/negocios/:negocioId/productos/:id` | Edita un producto |
+| PATCH | `/api/negocios/:negocioId/productos/:id/desactivar` | Desactiva un producto (no lo elimina) |
+| GET | `/api/negocios/:negocioId/subpedidos?estado=pendiente` | Lista subpedidos del negocio (filtro opcional por estado) |
+| GET | `/api/negocios/:negocioId/subpedidos/:id` | Detalle de un subpedido con sus productos |
+| PATCH | `/api/negocios/:negocioId/subpedidos/:id` | Acepta (descuenta stock) o rechaza un subpedido (`{"accion":"aceptar"}` o `{"accion":"rechazar"}`) |
 
 ## Estructura del proyecto
 
