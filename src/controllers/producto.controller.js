@@ -1,0 +1,17 @@
+const pool=require('../config/db');
+const nombreValido=n=>typeof n==='string'&&n.trim().length>0&&n.length<=120;
+const precioValido=p=>p!==undefined&&p!==null&&p!==''&&Number.isFinite(Number(p))&&Number(p)>0&&Number(p)<=9999999999;
+const stockValido=s=>s!==undefined&&s!==null&&s!==''&&Number.isSafeInteger(Number(s))&&Number(s)>=0;
+async function listarNegocios(req,res){try{const [rows]=await pool.query("SELECT l.id,l.nombre_comercial,l.categoria,l.direccion FROM locales l JOIN usuarios u ON u.id=l.usuario_id WHERE u.activo=1 ORDER BY l.nombre_comercial");res.json(rows);}catch(e){console.error(e);res.status(500).json({error:'Error al listar negocios.'});}}
+async function listarProductos(req,res){try{const [rows]=await pool.query('SELECT p.id,p.local_id,p.nombre,p.descripcion,p.precio,p.stock,p.activo FROM productos p JOIN locales l ON l.id=p.local_id JOIN usuarios u ON u.id=l.usuario_id WHERE p.local_id=? AND p.activo=1 AND u.activo=1 ORDER BY p.id DESC',[req.params.negocioId]);res.json(rows);}catch(e){console.error(e);res.status(500).json({error:'Error al listar productos.'});}}
+async function crearProducto(req,res){const {nombre,descripcion,precio,stock=0}=req.body||{};const {negocioId}=req.params;
+ if(!nombreValido(nombre)||!precioValido(precio)||!stockValido(stock))return res.status(400).json({error:'Nombre, precio positivo y stock entero no negativo obligatorios.'});
+ try{const [l]=await pool.query('SELECT l.id FROM locales l JOIN usuarios u ON u.id=l.usuario_id WHERE l.id=? AND u.activo=1',[negocioId]);if(!l.length)return res.status(403).json({error:'Local inexistente o inactivo.'});
+ const [r]=await pool.query('INSERT INTO productos(local_id,nombre,descripcion,precio,stock) VALUES(?,?,?,?,?)',[negocioId,nombre.trim(),descripcion||null,Number(precio),Number(stock)]);res.status(201).json({id:r.insertId,local_id:Number(negocioId),nombre,precio:Number(precio),stock:Number(stock)});
+ }catch(e){console.error(e);res.status(500).json({error:'Error al crear producto.'});}}
+async function actualizarProducto(req,res){const {nombre,descripcion,precio,stock}=req.body||{};const {negocioId,id}=req.params;
+ if((nombre!==undefined&&!nombreValido(nombre))||(precio!==undefined&&!precioValido(precio))||(stock!==undefined&&!stockValido(stock))||[nombre,descripcion,precio,stock].every(x=>x===undefined))return res.status(400).json({error:'Datos invalidos.'});
+ try{const [r]=await pool.query('UPDATE productos SET nombre=COALESCE(?,nombre), descripcion=COALESCE(?,descripcion),precio=COALESCE(?,precio),stock=COALESCE(?,stock) WHERE id=? AND local_id=?',[nombre===undefined?null:nombre.trim(),descripcion===undefined?null:descripcion,precio===undefined?null:Number(precio),stock===undefined?null:Number(stock),id,negocioId]);if(!r.affectedRows)return res.status(404).json({error:'Producto no encontrado.'});res.json({id:Number(id),mensaje:'Producto actualizado.'});}
+ catch(e){console.error(e);res.status(500).json({error:'Error al actualizar.'});}}
+async function desactivarProducto(req,res){try{const [r]=await pool.query('UPDATE productos SET activo=0 WHERE id=? AND local_id=?',[req.params.id,req.params.negocioId]);if(!r.affectedRows)return res.status(404).json({error:'Producto no encontrado.'});res.json({id:Number(req.params.id),activo:false});}catch(e){console.error(e);res.status(500).json({error:'Error al desactivar.'});}}
+module.exports={listarNegocios,listarProductos,crearProducto,actualizarProducto,desactivarProducto};

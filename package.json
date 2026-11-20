@@ -5,13 +5,32 @@
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
-    "dev": "node --watch src/server.js"
+    "dev": "node --watch src/server.js",
+    "test": "node --test test/*.test.js",
+    "preparar:roles": "node scripts/preparar-roles.js",
+    "db:modulos": "node scripts/aplicar-modulos.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.5",
-    "express": "^4.19.2",
-    "mysql2": "^3.11.0"
+    "cors": "^2.8.6",
+    "dotenv": "^16.6.1",
+    "express": "^4.22.3",
+    "jsonwebtoken": "^9.0.3",
+    "mysql2": "^3.24.6"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WILDER-06/Quiero-ya-.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/WILDER-06/Quiero-ya-/issues"
+  },
+  "homepage": "https://github.com/WILDER-06/Quiero-ya-#readme",
+  "devDependencies": {
+    "nodemon": "^3.1.14"
   }
 }

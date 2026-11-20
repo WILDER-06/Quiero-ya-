@@ -1,3 +1,25 @@
+
+# Dependencias
 node_modules/
+
+# Variables de entorno y contraseñas
 .env
-npm-debug.log
+.env.*
+!.env.example
+
+# Archivos temporales
+*.log
+npm-debug.log*
+.DS_Store
+
+# Configuracion local
+.vscode/
+
+# Resultados de pruebas
+coverage/
+
+# Scripts temporales de recuperacion
+scripts/restablecer-clave-prueba.js
+
+# Archivo con contraseñas
+QuieroYa_Usuarios_Prueba.xlsx

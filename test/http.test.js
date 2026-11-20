@@ -1,0 +1,14 @@
+const {test,after}=require('node:test');const assert=require('node:assert/strict');
+process.env.JWT_SECRET='clave_de_pruebas_unicamente_muy_larga_123456';
+const app=require('../src/server');
+const server=app.listen(0);
+const url=()=>`http://127.0.0.1:${server.address().port}`;
+test('health devuelve los 3 modulos',async()=>{const r=await fetch(url()+'/');assert.equal(r.status,200);assert.deepEqual((await r.json()).modulos,['autenticacion','catalogo','pedidos']);});
+test('pedidos sin token requieren autenticacion',async()=>{const r=await fetch(url()+'/api/pedidos');assert.equal(r.status,401);});
+test('catalogo escrito sin token requiere autenticacion',async()=>{const r=await fetch(url()+'/api/negocios/1/productos',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({nombre:'X',precio:100})});assert.equal(r.status,401);});
+test('registro con rol administrador publico prohibido',async()=>{const r=await fetch(url()+'/api/auth/registro/administrador',{method:'POST',headers:{'content-type':'application/json'},body:'{}'});assert.equal(r.status,400);});
+test('login sin datos valida entrada',async()=>{const r=await fetch(url()+'/api/auth/login',{method:'POST',headers:{'content-type':'application/json'},body:'{}'});assert.equal(r.status,400);});
+test('ruta desconocida devuelve 404',async()=>{const r=await fetch(url()+'/api/no-existe');assert.equal(r.status,404);});
+after(()=>server.close());
+test('interfaz web disponible en /app/',async()=>{const r=await fetch(url()+'/app/');assert.equal(r.status,200);const html=await r.text();assert.match(html,/QuieroYa!/);assert.match(html,/\/app\/app.js/);});
+test('interfaz JavaScript disponible',async()=>{const r=await fetch(url()+'/app/app.js');assert.equal(r.status,200);assert.match(await r.text(),/async function api\(/);});
