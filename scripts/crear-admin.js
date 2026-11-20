@@ -1,0 +1,4 @@
+require('dotenv').config();const bcrypt=require('bcryptjs');const pool=require('../src/config/db');
+(async()=>{const [email,password,nombre='Administrador']=process.argv.slice(2);if(!email||!password||password.length<8||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))throw Error('Uso: node scripts/crear-admin.js email password nombre');
+const [r]=await pool.query("SELECT id FROM roles WHERE LOWER(nombre)='administrador' LIMIT 1");if(!r.length)throw Error('Primero ejecuta npm run preparar:roles');
+const hash=await bcrypt.hash(password,10);await pool.query('INSERT INTO usuarios(rol_id,nombre,email,password_hash,activo) VALUES(?,?,?,?,1)',[r[0].id,nombre,email.trim().toLowerCase(),hash]);console.log('Administrador creado.');})().catch(e=>{console.error(e.message);process.exitCode=1;}).finally(()=>pool.end());

@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#192b29"><title>QuieroYa! · Todo lo que necesitas, cerca de ti</title><link rel="stylesheet" href="/app/styles.css"></head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <a class="brand" href="/app/" aria-label="QuieroYa inicio"><span class="brand-mark">Q<span>!</span></span><span>Quiero<span class="brand-accent">Ya!</span><small>Tu ciudad en un clic</small></span></a>
+    <div class="side-caption">EXPLORA</div>
+    <nav id="menu" aria-label="Navegación principal"></nav>
+    <div class="side-bottom"><div class="help-tile"><div class="help-illustration">✦</div><strong>Compra local,<br>recibe fácil.</strong><p>Encuentra lo que necesitas en los comercios de tu ciudad.</p></div><span class="version">QuieroYa! · Demostración académica</span></div>
+  </aside>
+  <div class="workspace">
+    <header class="topbar"><button class="menu-toggle icon-button" id="menuToggle" aria-label="Abrir menú">☰</button><div class="location"><span class="location-dot">◉</span><span><strong>Bienvenido a QuieroYa!</strong><small>Explora negocios y productos de tu ciudad</small></span></div><div class="top-actions"><span class="api-indicator" id="apiStatus"><i></i> Conectando...</span><button class="icon-button cart-icon" id="topCart" title="Ver carrito" aria-label="Ver carrito">🛍️ <b id="cartBadge">0</b></button><button class="user-chip" id="accountButton"><span class="avatar" id="userAvatar">👤</span><span id="userLabel">Ingresar</span><span class="chevron">⌄</span></button></div></header>
+    <main id="main" tabindex="-1"></main>
+    <footer class="footer"><span>© QuieroYa! · Proyecto académico</span><span>Pedidos de demostración · Sin pagos reales</span></footer>
+  </div>
+</div>
+<div class="overlay" id="overlay" hidden></div>
+<div class="drawer" id="cartDrawer" aria-hidden="true"><div class="drawer-header"><div><small>TU SELECCIÓN</small><h2>Mi carrito <span id="cartCount">(0)</span></h2></div><button class="close-button" id="closeCart" aria-label="Cerrar carrito">✕</button></div><div class="drawer-body" id="cartContent"></div><div class="drawer-footer" id="cartFooter"></div></div>
+<div class="toast-region" id="toasts" aria-live="polite"></div>
+<script src="/app/app.js" defer></script>
+</body></html>

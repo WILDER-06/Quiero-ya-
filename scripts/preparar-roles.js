@@ -1,0 +1,2 @@
+require('dotenv').config();const pool=require('../src/config/db');
+(async()=>{for(const nombre of ['cliente','negocio','repartidor','administrador']){const [r]=await pool.query('SELECT id FROM roles WHERE LOWER(nombre)=? LIMIT 1',[nombre]);if(!r.length)await pool.query('INSERT INTO roles(nombre) VALUES(?)',[nombre]);}console.log('Roles disponibles.');})().catch(e=>{console.error(e.message);process.exitCode=1;}).finally(()=>pool.end());

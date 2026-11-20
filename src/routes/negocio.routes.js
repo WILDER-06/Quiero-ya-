@@ -1,0 +1,10 @@
+const r=require('express').Router();const c=require('../controllers/producto.controller');const s=require('../controllers/subpedido.controller');const {autenticar,permitir,propietarioNegocio}=require('../middleware/auth');
+r.get('/',c.listarNegocios);
+r.get('/:negocioId/productos',c.listarProductos);
+r.post('/:negocioId/productos',autenticar,permitir('negocio','administrador'),propietarioNegocio,c.crearProducto);
+r.patch('/:negocioId/productos/:id',autenticar,permitir('negocio','administrador'),propietarioNegocio,c.actualizarProducto);
+r.patch('/:negocioId/productos/:id/desactivar',autenticar,permitir('negocio','administrador'),propietarioNegocio,c.desactivarProducto);
+r.get('/:negocioId/subpedidos',autenticar,permitir('negocio','administrador'),propietarioNegocio,s.listarSubpedidos);
+r.get('/:negocioId/subpedidos/:id',autenticar,permitir('negocio','administrador'),propietarioNegocio,s.detalleSubpedido);
+r.patch('/:negocioId/subpedidos/:id',autenticar,permitir('negocio','administrador'),propietarioNegocio,s.resolverSubpedido);
+module.exports=r;
